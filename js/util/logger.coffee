@@ -1,7 +1,7 @@
 window.Logger = (() ->
   {
     debug: ( m ) ->
-      if ( undefined != navigator)
+      if ( navigator && navigator.notification )
         navigator.notification.alert( "" + m )
       else
         alert( m )

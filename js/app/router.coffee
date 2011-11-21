@@ -6,7 +6,6 @@ window.Router = (() ->
       self.routing_table[name] = { mask: mask, handler: handler }
     proceed: () ->
       href = window.location.href
-      Logger.debug "processing routes"
       $.each( self.routing_table, ( name, obj ) ->
         mask = obj.mask
         handler = obj.handler
@@ -23,6 +22,7 @@ window.Router = (() ->
           if mask.call( window )
             handler.call( window )
             return false
+        true
       )
   }
 )()

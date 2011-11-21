@@ -4,6 +4,7 @@ Core = ( opts )->
 
 Core.prototype = {
   _init: ( opts )->
+    opts = opts || {}
     this.options = $.extend( {}, opts )
 
   run: ( force ) ->
@@ -20,7 +21,6 @@ Core.prototype = {
 
   initializer: ( () ->
     this.pool = []
-    Logger.debug()
     self = this
     {
       register: ( i ) ->

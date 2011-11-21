@@ -133,12 +133,24 @@
       }
     };
   })();
+  window.Logger = (function() {
+    return {
+      debug: function(m) {
+        if (navigator && navigator.notification) {
+          return navigator.notification.alert("" + m);
+        } else {
+          return alert(m);
+        }
+      }
+    };
+  })();
   Core = function(opts) {
     this._init(opts);
     return null;
   };
   Core.prototype = {
     _init: function(opts) {
+      opts = opts || {};
       return this.options = $.extend({}, opts);
     },
     run: function(force) {
@@ -159,7 +171,6 @@
     initializer: (function() {
       var self;
       this.pool = [];
-      Logger.debug();
       self = this;
       return {
         register: function(i) {
@@ -209,6 +220,7 @@
   };
   Core.prototype = {
     _init: function(opts) {
+      opts = opts || {};
       return this.options = $.extend({}, opts);
     },
     run: function(force) {
@@ -229,7 +241,6 @@
     initializer: (function() {
       var self;
       this.pool = [];
-      Logger.debug();
       self = this;
       return {
         register: function(i) {
@@ -253,7 +264,7 @@
       return this.options = options;
     },
     render: function(data) {
-      return p("renderer called");
+      return Logger.debug("renderer called");
     }
   };
   window.Renderer = Renderer;
@@ -271,7 +282,6 @@
       proceed: function() {
         var href;
         href = window.location.href;
-        Logger.debug("processing routes");
         return $.each(self.routing_table, function(name, obj) {
           var handler, mask;
           mask = obj.mask;
@@ -294,6 +304,7 @@
               return false;
             }
           }
+          return true;
         });
       }
     };
@@ -301,6 +312,7 @@
   router = (function() {
     return {
       run: function() {
+        Logger.debug("Router ready to proceed");
         return window.Router.proceed();
       }
     };
@@ -501,7 +513,7 @@
   window.Logger = (function() {
     return {
       debug: function(m) {
-        if (void 0 !== navigator) {
+        if (navigator && navigator.notification) {
           return navigator.notification.alert("" + m);
         } else {
           return alert(m);

@@ -8,6 +8,7 @@ appFiles  = [
   'lib/core/date.coffee'
   'lib/core/number.coffee'
   'lib/i18n/i18n.coffee'
+  'util/logger.coffee'
   'app/core.coffee'
 ]
 

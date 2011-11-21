@@ -6,7 +6,7 @@ Renderer.prototype = {
   _init: ( options ) ->
     this.options = options
   render: ( data ) ->
-    p "renderer called"
+    Logger.debug "renderer called"
 }
 
 window.Renderer = Renderer
