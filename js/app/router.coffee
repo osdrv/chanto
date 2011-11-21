@@ -4,6 +4,7 @@ window.Router = (() ->
   {
     register: ( name, mask, handler ) ->
       self.routing_table[name] = { mask: mask, handler: handler }
+      self
     proceed: () ->
       href = window.location.href
       $.each( self.routing_table, ( name, obj ) ->

@@ -9,7 +9,7 @@ Action.prototype = {
     this.data = {}
   
   bang: () ->
-    p "action bang!"
+    Logger.debug "action bang!"
 }
 
 window.Action = Action

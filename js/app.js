@@ -196,7 +196,7 @@
       return this.data = {};
     },
     bang: function() {
-      return p("action bang!");
+      return Logger.debug("action bang!");
     }
   };
   window.Action = Action;
@@ -265,6 +265,15 @@
     },
     render: function(data) {
       return Logger.debug("renderer called");
+    },
+    setHeader: function(content) {
+      return $("div[data-role=\"header\"]").empty().append(content);
+    },
+    setFooter: function(content) {
+      return $("div[data-role=\"footer\"]").empty().append(content);
+    },
+    setContent: function(content) {
+      return $("div[data-role=\"content\"]").empty().append(content);
     }
   };
   window.Renderer = Renderer;
@@ -274,10 +283,11 @@
     this.routing_table = {};
     return {
       register: function(name, mask, handler) {
-        return self.routing_table[name] = {
+        self.routing_table[name] = {
           mask: mask,
           handler: handler
         };
+        return self;
       },
       proceed: function() {
         var href;
