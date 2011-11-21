@@ -312,7 +312,6 @@
   router = (function() {
     return {
       run: function() {
-        Logger.debug("Router ready to proceed");
         return window.Router.proceed();
       }
     };
@@ -502,7 +501,7 @@
       options = options || {};
       this.options = $.extend({}, options);
       if (!this.options.remote_host) {
-        return raise("No remote host given.");
+        return Logger.debug("No remote host given.");
       }
     },
     get: function(key, opts) {
