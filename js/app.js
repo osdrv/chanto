@@ -1,5 +1,5 @@
 (function() {
-  var Core, locales, router;
+  var Action, Core, RemoteData, Renderer, locales, router;
   window.Array.prototype.first = function() {
     return this[0];
   };
@@ -174,6 +174,35 @@
     })()
   };
   window.core = new Core();
+  Action = function(options) {
+    this._init(options);
+    return null;
+  };
+  Action.prototype = {
+    _init: function(options) {
+      options = options || {};
+      this.options = $.extend({}, options);
+      return this.data = {};
+    },
+    bang: function() {
+      return p("action bang!");
+    }
+  };
+  window.Action = Action;
+  window.Config = (function() {
+    var self;
+    this.pool = {};
+    self = this;
+    return {
+      v: function(k, v) {
+        if (v === void 0) {
+          return self.pool[k];
+        } else {
+          return self.pool[k] = v;
+        }
+      }
+    };
+  })();
   Core = function(opts) {
     this._init(opts);
     return null;
@@ -215,6 +244,19 @@
     })()
   };
   window.core = new Core();
+  Renderer = function(options) {
+    this._init(options);
+    return null;
+  };
+  Renderer.prototype = {
+    _init: function(options) {
+      return this.options = options;
+    },
+    render: function(data) {
+      return p("renderer called");
+    }
+  };
+  window.Renderer = Renderer;
   window.Router = (function() {
     var self;
     self = this;
@@ -264,11 +306,6 @@
     };
   })();
   window.core.initializer.register(router);
-  window.core.initializer.register({
-    run: function() {
-      return $("[data-role=\"tabs-slider\"]").tabs_slider();
-    }
-  });
   window.Array.prototype.first = function() {
     return this[0];
   };
@@ -444,123 +481,23 @@
       });
     }
   };
-  $.widget("ui.tabs_slider", {
-    options: {
-      speed: 20,
-      stable_offset: 100
-    },
-    _create: function() {
-      this._decorate();
-      this._calcTabsWidth();
-      this._bindDeviceWidthChange();
-      this._bindUserActions();
-      this.state = 1;
-      return this.stable_offset = this.options.stable_offset;
-    },
-    _decorate: function() {
-      this.element.addClass("ui-tabs-slider");
-      return this.element.children("ul").addClass("ui-slider-internal").children("li").addClass("ui-slider-tab");
-    },
-    _bindDeviceWidthChange: function() {
-      var self;
-      self = this;
-      return $(document).bind("orientationchange", function() {
-        return self._calcTabsWidth();
-      });
-    },
-    _bindUserActions: function() {
-      var events, self;
-      self = this;
-      events = ["mousedown", "mouseup", "mousemove"];
-      this.element.bind(events[0], function(e) {
-        e.preventDefault();
-        this.touchable = true;
-        return this.touch_started_at = this.touch_offset = self.pageX(e);
-      });
-      this.element.bind(events[1], function(e) {
-        e.preventDefault();
-        this.touchable = false;
-        this.touch_offset = null;
-        return self.moveStableState.call(self);
-      });
-      return this.element.bind(events[2], function(e) {
-        var deltaX, offset, state_offset;
-        if (this.touchable) {
-          e.preventDefault();
-          state_offset = (self.state - 1) * self.window_width * self.stable_offset / 100;
-          offset = self.pageX(e) - this.touch_started_at + state_offset;
-          deltaX = self.pageX(e) - this.touch_offset;
-          this.touch_offset = self.pageX(e);
-          return self.move.call(self, offset);
-        }
-      });
-    },
-    pageX: function(e) {
-      if (e.originalEvent.touches) {
-        return e.originalEvent.touches[0].pageX;
-      } else {
-        return e.pageX;
+  RemoteData = function(options) {
+    this._init(options);
+    return null;
+  };
+  RemoteData.prototype = {
+    _init: function(options) {
+      options = options || {};
+      this.options = $.extend({}, options);
+      if (!this.options.remote_host) {
+        return raise("No remote host given.");
       }
     },
-    move: function(px) {
-      p(px);
-      this.offset = Math.round(1000 * px / this.window_width, 10);
-      return this.element.children("ul").css("left", this.offset + "px");
-    },
-    _calcTabsWidth: function() {
-      var lis, ul, width;
-      width = parseInt(window.innerWidth, 10);
-      this.window_width = width;
-      ul = this.element.children("ul");
-      lis = ul.children("li");
-      ul.css("width", (lis.count * width) + "px");
-      lis.css("width", width + "px");
-      return this.tabs_count = lis.count;
-    },
-    moveStableState: function(state) {
-      var animation, calculated_state, current_offset, delta, new_offset, self, step, w, _ref;
-      w = this.window_width;
-      self = this;
-      if (state === void 0) {
-        calculated_state = Math.round(this.offset / this.window_width) - 1;
-        delta = this.offset - this.getStableOffset();
-        if (delta > 0 && delta > this.options.stable_offset) {
-          calculated_state += 1;
-        } else if (delta < 0 && -1 * delta > this.options.stable_offset) {
-          calculated_state -= 1;
-        }
-        if (calculated_state > this.tabs_count) {
-          calculated_state = this.tabs_count;
-        } else if (calculated_state < 1) {
-          calculated_state = 1;
-        }
-        this.state = calculated_state;
-      } else {
-        this.state = state;
-      }
-      new_offset = this.getStableOffset();
-      current_offset = this.offset;
-      if (new_offset === current_offset) {
-        return;
-      }
-      step = (_ref = new_offset - current_offset > 0) != null ? _ref : {
-        1: -1
-      };
-      step *= this.options.speed;
-      return animation = window.setInterval(function() {
-        current_offset += step;
-        if (Math.abs(new_offset - current_offset) < Math.abs(step)) {
-          current_offset = new_offset;
-          window.clearInterval(animation);
-          self.element.trigger("state_change", self.state);
-        }
-        return self.move(Math.round(current_offset / 100 * w));
-      }, 20);
-    },
-    getStableOffset: function() {
-      return (this.state - 1) * this.window_width;
+    get: function(key, opts) {
+      return $.get(this.options.remote_host + key, opts.success);
     }
-  });
+  };
+  window.RemoteData = RemoteData;
   window.Logger = (function() {
     return {
       debug: function(m) {
