@@ -1,7 +1,7 @@
 router = ( () ->
   {
     run: () ->
-      p( window.location.href )
+      window.Router.proceed()
   }
 )()
 

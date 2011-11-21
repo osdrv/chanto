@@ -7,21 +7,26 @@ Core.prototype = {
     this.options = $.extend( {}, opts )
 
   run: ( force ) ->
-    force = force || this.options.force_run_initializers || false
-    return if this.__inited && !force
-    this.__inited = true
-    this._runInitializers()
+    try
+      force = force || this.options.force_run_initializers || false
+      return if this.__inited && !force
+      this.__inited = true
+      this._runInitializers()
+    catch e
+      Logger.debug e
 
   _runInitializers: () ->
     this.initializer.run()
 
   initializer: ( () ->
     this.pool = []
+    Logger.debug()
+    self = this
     {
       register: ( i ) ->
-        pool.push( i )
+        self.pool.push( i )
       run: () ->
-        pool.each( ( i ) ->
+        self.pool.each( ( i ) ->
           i.run()
         )
     }
