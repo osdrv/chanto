@@ -1,29 +1,32 @@
-window.Router = (() ->
+Router = (() ->
   self = this
   this.routing_table = {}
   {
     register: ( name, mask, handler ) ->
       self.routing_table[name] = { mask: mask, handler: handler }
-      self
+      Router
     proceed: () ->
       href = window.location.href
       $.each( self.routing_table, ( name, obj ) ->
         mask = obj.mask
         handler = obj.handler
+        proceed = false
         if typeof( mask ) == "string"
           if href.search( mask ) != -1
-            handler.call( window )
-            return false
+            proceed = true
         else if typeof( mask ) == "object"
           if typeof( mask.test ) == "function"
             if mask.test( href )
-              handler.call( window )
-              return false
+              proceed = true
         else if typeof( mask ) == "function"
           if mask.call( window )
-            handler.call( window )
-            return false
-        true
+            proceed = true
+        if proceed
+          handler.call( self )
+          self.action.bang() if self.action
+          false
       )
   }
 )()
+
+window.Router = Router

@@ -1,5 +1,5 @@
 (function() {
-  var Action, Core, RemoteData, Renderer, locales, router;
+  var Action, Core, RemoteData, Renderer, Request, Router, locales, router;
   window.Array.prototype.first = function() {
     return this[0];
   };
@@ -255,6 +255,30 @@
     })()
   };
   window.core = new Core();
+  window.human_date = function(d) {
+    var date, time;
+    date = new Date();
+    time = Date.parse(d.replace(/\-/g, '/'));
+    date.setTime(time);
+    if (date) {
+      return date.getDate() + " " + date.getMonthNameRelated();
+    }
+  };
+  window.p = function() {
+    return console.log(arguments);
+  };
+  window._c = function(e) {
+    e.preventDefault();
+    return e.stopPropagation();
+  };
+  window._w = function(str) {
+    return str.split(/\s+/);
+  };
+  $(function() {
+    return $('a[href="#"]').live('click', function(e) {
+      return e.preventDefault();
+    });
+  });
   Renderer = function(options) {
     this._init(options);
     return null;
@@ -277,7 +301,35 @@
     }
   };
   window.Renderer = Renderer;
-  window.Router = (function() {
+  Request = (function() {
+    var ret;
+    ret = {
+      params: function(url) {
+        var hash, hashes;
+        url = url || window.location.href;
+        hash = {};
+        hashes = url.slice(window.location.href.indexOf('?') + 1).split('&');
+        hashes.each(function(pair) {
+          pair = pair.split("=");
+          return hash[pair[0]] = pair[1];
+        });
+        return hash;
+      },
+      hash: function(url) {
+        url = url || window.location.hash;
+        url.replace("#", "");
+        return url;
+      }
+    };
+    _w("host port protocol pathname hostname").each(function(k) {
+      return ret[k] = function() {
+        return window.location[k];
+      };
+    });
+    return ret;
+  })(window);
+  window.Request = Request;
+  Router = (function() {
     var self;
     self = this;
     this.routing_table = {};
@@ -287,38 +339,43 @@
           mask: mask,
           handler: handler
         };
-        return self;
+        return Router;
       },
       proceed: function() {
         var href;
         href = window.location.href;
         return $.each(self.routing_table, function(name, obj) {
-          var handler, mask;
+          var handler, mask, proceed;
           mask = obj.mask;
           handler = obj.handler;
+          proceed = false;
           if (typeof mask === "string") {
             if (href.search(mask) !== -1) {
-              handler.call(window);
-              return false;
+              proceed = true;
             }
           } else if (typeof mask === "object") {
             if (typeof mask.test === "function") {
               if (mask.test(href)) {
-                handler.call(window);
-                return false;
+                proceed = true;
               }
             }
           } else if (typeof mask === "function") {
             if (mask.call(window)) {
-              handler.call(window);
-              return false;
+              proceed = true;
             }
           }
-          return true;
+          if (proceed) {
+            handler.call(self);
+            if (self.action) {
+              self.action.bang();
+            }
+            return false;
+          }
         });
       }
     };
   })();
+  window.Router = Router;
   router = (function() {
     return {
       run: function() {
@@ -530,34 +587,15 @@
       }
     };
   })();
-  window.p = function() {
-    return console.log(arguments);
-  };
-  window._c = function(e) {
-    e.preventDefault();
-    return e.stopPropagation();
-  };
-  window._w = function(str) {
-    return str.split(/\s+/);
-  };
-  $(function() {
-    return $('a[href="#"]').live('click', function(e) {
-      return e.preventDefault();
-    });
-  });
-  window.p = function() {
-    return console.log(arguments);
-  };
-  window._c = function(e) {
-    e.preventDefault();
-    return e.stopPropagation();
-  };
-  window._w = function(str) {
-    return str.split(/\s+/);
-  };
-  $(function() {
-    return $('a[href="#"]').live('click', function(e) {
-      return e.preventDefault();
-    });
-  });
+  window.Logger = (function() {
+    return {
+      debug: function(m) {
+        if (navigator && navigator.notification) {
+          return navigator.notification.alert("" + m);
+        } else {
+          return alert(m);
+        }
+      }
+    };
+  })();
 }).call(this);
