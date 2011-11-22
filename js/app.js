@@ -264,6 +264,22 @@
       return date.getDate() + " " + date.getMonthNameRelated();
     }
   };
+  window.url_query_string = function(params, use_blank) {
+    var request_pairs, res;
+    use_blank = use_blank || false;
+    request_pairs = [];
+    $.each(params, function(k, v) {
+      if (!use_blank && !v) {
+        return;
+      }
+      return request_pairs.push(k + "=" + v);
+    });
+    res = request_pairs.join("&");
+    if (res) {
+      res = "?" + res;
+    }
+    return res;
+  };
   window.p = function() {
     return console.log(arguments);
   };
@@ -295,19 +311,19 @@
       return $("div[data-role=\"header\"]").empty().append(content);
     },
     getHeader: function() {
-      return $("div[data-role=\"header\"]");
+      return $("div[data-role=\"header\"]").last();
     },
     setFooter: function(content) {
       return $("div[data-role=\"footer\"]").empty().append(content);
     },
     getFooter: function() {
-      return $("div[data-role=\"footer\"]");
+      return $("div[data-role=\"footer\"]").last();
     },
     setContent: function(content) {
       return $("div[data-role=\"content\"]").empty().append(content);
     },
     getContent: function() {
-      return $("div[data-role=\"content\"]");
+      return $("div[data-role=\"content\"]").last();
     }
   };
   window.Renderer = Renderer;

@@ -11,15 +11,15 @@ Renderer.prototype = {
   setHeader: ( content ) ->
     $("div[data-role=\"header\"]").empty().append( content )
   getHeader: () ->
-    $("div[data-role=\"header\"]")
+    $("div[data-role=\"header\"]").last()
   setFooter: ( content ) ->
     $("div[data-role=\"footer\"]").empty().append( content )
   getFooter: () ->
-    $("div[data-role=\"footer\"]")
+    $("div[data-role=\"footer\"]").last()
   setContent: ( content ) ->
     $("div[data-role=\"content\"]").empty().append( content )
   getContent: () ->
-    $("div[data-role=\"content\"]")
+    $("div[data-role=\"content\"]").last()
 }
 
 window.Renderer = Renderer
