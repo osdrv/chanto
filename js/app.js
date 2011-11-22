@@ -285,7 +285,8 @@
   };
   Renderer.prototype = {
     _init: function(options) {
-      return this.options = options;
+      options = options || {};
+      return this.options = $.extend({}, options);
     },
     render: function(data) {
       return Logger.debug("renderer called");
@@ -293,11 +294,20 @@
     setHeader: function(content) {
       return $("div[data-role=\"header\"]").empty().append(content);
     },
+    getHeader: function() {
+      return $("div[data-role=\"header\"]");
+    },
     setFooter: function(content) {
       return $("div[data-role=\"footer\"]").empty().append(content);
     },
+    getFooter: function() {
+      return $("div[data-role=\"footer\"]");
+    },
     setContent: function(content) {
       return $("div[data-role=\"content\"]").empty().append(content);
+    },
+    getContent: function() {
+      return $("div[data-role=\"content\"]");
     }
   };
   window.Renderer = Renderer;
