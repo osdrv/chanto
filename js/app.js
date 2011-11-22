@@ -617,15 +617,4 @@
       }
     };
   })();
-  window.Logger = (function() {
-    return {
-      debug: function(m) {
-        if (navigator && navigator.notification) {
-          return navigator.notification.alert("" + m);
-        } else {
-          return alert(m);
-        }
-      }
-    };
-  })();
 }).call(this);
