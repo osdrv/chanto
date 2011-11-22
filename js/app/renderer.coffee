@@ -9,17 +9,17 @@ Renderer.prototype = {
   render: ( data ) ->
     Logger.debug "renderer called"
   setHeader: ( content ) ->
-    $("div[data-role=\"header\"]").empty().append( content )
+    this.getHeader().empty().append( content )
   getHeader: () ->
-    $("div[data-role=\"header\"]").last()
+    $("div[data-role=\"header\"]").filter( ":visible" )
   setFooter: ( content ) ->
-    $("div[data-role=\"footer\"]").empty().append( content )
+    this.getFooter().empty().append( content )
   getFooter: () ->
-    $("div[data-role=\"footer\"]").last()
+    $("div[data-role=\"footer\"]").filter( ":visible" )
   setContent: ( content ) ->
-    $("div[data-role=\"content\"]").empty().append( content )
+    this.getContent().empty().append( content )
   getContent: () ->
-    $("div[data-role=\"content\"]").last()
+    $("div[data-role=\"content\"]").filter( ":visible" )
 }
 
 window.Renderer = Renderer

@@ -308,22 +308,22 @@
       return Logger.debug("renderer called");
     },
     setHeader: function(content) {
-      return $("div[data-role=\"header\"]").empty().append(content);
+      return this.getHeader().empty().append(content);
     },
     getHeader: function() {
-      return $("div[data-role=\"header\"]").last();
+      return $("div[data-role=\"header\"]").filter(":visible");
     },
     setFooter: function(content) {
-      return $("div[data-role=\"footer\"]").empty().append(content);
+      return this.getFooter().empty().append(content);
     },
     getFooter: function() {
-      return $("div[data-role=\"footer\"]").last();
+      return $("div[data-role=\"footer\"]").filter(":visible");
     },
     setContent: function(content) {
-      return $("div[data-role=\"content\"]").empty().append(content);
+      return this.getContent().empty().append(content);
     },
     getContent: function() {
-      return $("div[data-role=\"content\"]").last();
+      return $("div[data-role=\"content\"]").filter(":visible");
     }
   };
   window.Renderer = Renderer;
@@ -369,7 +369,7 @@
       },
       proceed: function() {
         var href;
-        href = window.location.href;
+        href = Request.pathname();
         return $.each(self.routing_table, function(name, obj) {
           var handler, mask, proceed;
           mask = obj.mask;
@@ -377,6 +377,10 @@
           proceed = false;
           if (typeof mask === "string") {
             if (href.search(mask) !== -1) {
+              proceed = true;
+            }
+          } else if (mask instanceof Array) {
+            if (mask.indexof(href) !== null) {
               proceed = true;
             }
           } else if (typeof mask === "object") {
