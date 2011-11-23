@@ -302,7 +302,8 @@
   Renderer.prototype = {
     _init: function(options) {
       options = options || {};
-      return this.options = $.extend({}, options);
+      this.options = $.extend({}, options);
+      return this.page = this.options.page || $(".ui-page").first();
     },
     render: function(data) {
       return Logger.debug("renderer called");
@@ -311,19 +312,19 @@
       return this.getHeader().empty().append(content);
     },
     getHeader: function() {
-      return $("div[data-role=\"header\"]").filter(":visible");
+      return this.page.find("div[data-role=\"header\"]");
     },
     setFooter: function(content) {
       return this.getFooter().empty().append(content);
     },
     getFooter: function() {
-      return $("div[data-role=\"footer\"]").filter(":visible");
+      return this.page.find("div[data-role=\"footer\"]");
     },
     setContent: function(content) {
       return this.getContent().empty().append(content);
     },
     getContent: function() {
-      return $("div[data-role=\"content\"]").filter(":visible");
+      return this.page.find("div[data-role=\"content\"]");
     }
   };
   window.Renderer = Renderer;
@@ -396,8 +397,12 @@
           }
           if (proceed) {
             handler.call(self);
-            if (self.action) {
-              self.action.bang();
+            try {
+              if (self.action) {
+                self.action.bang();
+              }
+            } catch (e) {
+              Logger.debug(e);
             }
             return false;
           }
@@ -606,6 +611,17 @@
     }
   };
   window.RemoteData = RemoteData;
+  window.Logger = (function() {
+    return {
+      debug: function(m) {
+        if (navigator && navigator.notification) {
+          return navigator.notification.alert("" + m);
+        } else {
+          return alert(m);
+        }
+      }
+    };
+  })();
   window.Logger = (function() {
     return {
       debug: function(m) {

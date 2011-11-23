@@ -27,7 +27,10 @@ Router = (() ->
             proceed = true
         if proceed
           handler.call( self )
-          self.action.bang() if self.action
+          try
+            self.action.bang() if self.action
+          catch e
+            Logger.debug e
           false
       )
   }

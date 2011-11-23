@@ -6,20 +6,21 @@ Renderer.prototype = {
   _init: ( options ) ->
     options = options || {}
     this.options = $.extend( {}, options )
+    this.page = this.options.page || $(".ui-page").first()
   render: ( data ) ->
     Logger.debug "renderer called"
   setHeader: ( content ) ->
     this.getHeader().empty().append( content )
   getHeader: () ->
-    $("div[data-role=\"header\"]").filter( ":visible" )
+    this.page.find("div[data-role=\"header\"]")
   setFooter: ( content ) ->
     this.getFooter().empty().append( content )
   getFooter: () ->
-    $("div[data-role=\"footer\"]").filter( ":visible" )
+    this.page.find("div[data-role=\"footer\"]")
   setContent: ( content ) ->
     this.getContent().empty().append( content )
   getContent: () ->
-    $("div[data-role=\"content\"]").filter( ":visible" )
+    this.page.find("div[data-role=\"content\"]")
 }
 
 window.Renderer = Renderer
