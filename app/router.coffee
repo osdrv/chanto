@@ -18,10 +18,9 @@ Router = (() ->
         else if mask instanceof Array
           if mask.indexof( href ) != null
             proceed = true
-        else if typeof( mask ) == "object"
-          if typeof( mask.test ) == "function"
-            if mask.test( href )
-              proceed = true
+        else if typeof( mask.test ) == "function"
+          if mask.test( href )
+            proceed = true
         else if typeof( mask ) == "function"
           if mask.call( window )
             proceed = true

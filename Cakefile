@@ -48,16 +48,16 @@ task 'build', 'Build single application file from source files', ->
       appContents[index] = fileContents
       process() if --remaining is 0
   process = ->
-    fs.writeFile './app.coffee', appContents.join('\n\n'), 'utf8', (err) ->
+    fs.writeFile './chanto.coffee', appContents.join('\n\n'), 'utf8', (err) ->
       throw err if err
-      exec 'coffee --compile ./app.coffee', (err, stdout, stderr) ->
+      exec 'coffee --compile ./chanto.coffee', (err, stdout, stderr) ->
         if err
           util.log 'Error compiling coffee file.'
           grrrr 'Uh, your coffee is bad.'
         else
-          fs.unlink './app.coffee', (err) ->
+          fs.unlink './chanto.coffee', (err) ->
             if err
-              util.log 'Couldn\'t delete the app.coffee file/'
+              util.log 'Couldn\'t delete the chanto.coffee file/'
             util.log 'Done building coffee file.'
             grrrr 'Okay, coffee is ready.'
 
