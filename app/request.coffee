@@ -13,8 +13,11 @@ Request = (() ->
       url = url || window.location.hash
       url.replace("#", "")
       url
+    hostname: () ->
+      _r = ret
+      [ _r.protocol(), "//", _r.host(), _r.port() ].join("")
   }
-  _w("host port protocol pathname hostname").each(( k ) ->
+  _w("host port protocol pathname").each(( k ) ->
     ret[k] = ()->
       window.location[k]
   )

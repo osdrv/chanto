@@ -135,12 +135,15 @@
   })();
   window.Logger = (function() {
     return {
-      debug: function(m) {
+      notice: function(m) {
         if (navigator && navigator.notification) {
           return navigator.notification.alert("" + m);
         } else {
           return alert(m);
         }
+      },
+      debug: function(m) {
+        return console.log(m);
       }
     };
   })();
@@ -346,9 +349,14 @@
         url = url || window.location.hash;
         url.replace("#", "");
         return url;
+      },
+      hostname: function() {
+        var _r;
+        _r = ret;
+        return [_r.protocol(), "//", _r.host(), _r.port()].join("");
       }
     };
-    _w("host port protocol pathname hostname").each(function(k) {
+    _w("host port protocol pathname").each(function(k) {
       return ret[k] = function() {
         return window.location[k];
       };
@@ -376,33 +384,37 @@
           mask = obj.mask;
           handler = obj.handler;
           proceed = false;
-          if (typeof mask === "string") {
-            if (href.search(mask) !== -1) {
-              proceed = true;
-            }
-          } else if (mask instanceof Array) {
-            if (mask.indexof(href) !== null) {
-              proceed = true;
-            }
-          } else if (typeof mask.test === "function") {
-            if (mask.test(href)) {
-              proceed = true;
-            }
-          } else if (typeof mask === "function") {
-            if (mask.call(window)) {
-              proceed = true;
-            }
-          }
-          if (proceed) {
-            handler.call(self);
-            try {
-              if (self.action) {
-                self.action.bang();
+          try {
+            if (typeof mask === "string") {
+              if (href.search(mask) !== -1) {
+                proceed = true;
               }
-            } catch (e) {
-              Logger.debug(e);
+            } else if (mask instanceof Array) {
+              if (mask.indexof(href) !== null) {
+                proceed = true;
+              }
+            } else if (typeof mask.test === "function") {
+              if (mask.test(href)) {
+                proceed = true;
+              }
+            } else if (typeof mask === "function") {
+              if (mask.call(window)) {
+                proceed = true;
+              }
             }
-            return false;
+            if (proceed) {
+              handler.call(self);
+              try {
+                if (self.action) {
+                  self.action.bang();
+                }
+              } catch (e) {
+                Logger.debug(e);
+              }
+              return false;
+            }
+          } catch (e) {
+            return Logger.debug(e);
           }
         });
       }
@@ -611,23 +623,29 @@
   window.RemoteData = RemoteData;
   window.Logger = (function() {
     return {
-      debug: function(m) {
+      notice: function(m) {
         if (navigator && navigator.notification) {
           return navigator.notification.alert("" + m);
         } else {
           return alert(m);
         }
+      },
+      debug: function(m) {
+        return console.log(m);
       }
     };
   })();
   window.Logger = (function() {
     return {
-      debug: function(m) {
+      notice: function(m) {
         if (navigator && navigator.notification) {
           return navigator.notification.alert("" + m);
         } else {
           return alert(m);
         }
+      },
+      debug: function(m) {
+        return console.log(m);
       }
     };
   })();
