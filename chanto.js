@@ -617,7 +617,9 @@
       }
     },
     get: function(key, opts) {
-      return $.get(this.options.remote_host + key, opts.success);
+      var dataType;
+      dataType = opts.dataType || "html";
+      return $.get(this.options.remote_host + key, opts.success, dataType);
     }
   };
   window.RemoteData = RemoteData;

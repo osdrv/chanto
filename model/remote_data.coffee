@@ -9,7 +9,8 @@ RemoteData.prototype = {
     Logger.debug("No remote host given.") if !this.options.remote_host
   
   get: ( key, opts ) ->
-    $.get( this.options.remote_host + key, opts.success )
+    dataType = opts.dataType || "html"
+    $.get( this.options.remote_host + key, opts.success, dataType )
 }
 
 window.RemoteData = RemoteData
