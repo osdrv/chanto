@@ -165,6 +165,9 @@
         this.__inited = true;
         return this._runInitializers();
       } catch (e) {
+        if (Config.v("throw_exceptions")) {
+          throw e;
+        }
         return Logger.debug(e);
       }
     },
@@ -235,6 +238,9 @@
         this.__inited = true;
         return this._runInitializers();
       } catch (e) {
+        if (Config.v("throw_exceptions")) {
+          throw e;
+        }
         return Logger.debug(e);
       }
     },
@@ -354,6 +360,15 @@
         var _r;
         _r = ret;
         return [_r.protocol(), "//", _r.host(), _r.port()].join("");
+      },
+      build_query_string: function(h) {
+        var i, params, _i, _len;
+        params = [];
+        for (_i = 0, _len = h.length; _i < _len; _i++) {
+          i = h[_i];
+          params.push(i + "=" + h[i]);
+        }
+        return params.join("&");
       }
     };
     _w("host port protocol pathname").each(function(k) {
@@ -409,11 +424,17 @@
                   self.action.bang();
                 }
               } catch (e) {
+                if (Config.v("throw_exceptions")) {
+                  throw e;
+                }
                 Logger.debug(e);
               }
               return false;
             }
           } catch (e) {
+            if (Config.v("throw_exceptions")) {
+              throw e;
+            }
             return Logger.debug(e);
           }
         });

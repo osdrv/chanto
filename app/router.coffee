@@ -31,9 +31,11 @@ Router = (() ->
             try
               self.action.bang() if self.action
             catch e
+              throw e if Config.v( "throw_exceptions" )
               Logger.debug e
             false
         catch e
+          throw e if Config.v( "throw_exceptions" )
           Logger.debug e
       )
   }

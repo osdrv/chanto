@@ -16,6 +16,11 @@ Request = (() ->
     hostname: () ->
       _r = ret
       [ _r.protocol(), "//", _r.host(), _r.port() ].join("")
+    build_query_string: ( h ) ->
+      params = []
+      for i in h
+        params.push( i + "=" + h[ i ] )
+      params.join("&")
   }
   _w("host port protocol pathname").each(( k ) ->
     ret[k] = ()->

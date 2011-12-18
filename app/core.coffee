@@ -14,6 +14,7 @@ Core.prototype = {
       this.__inited = true
       this._runInitializers()
     catch e
+      throw e if Config.v( "throw_exceptions" )
       Logger.debug e
 
   _runInitializers: () ->
