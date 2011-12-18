@@ -53,6 +53,7 @@ task 'build', 'Build single application file from source files', ->
       exec 'coffee --compile ./chanto.coffee', (err, stdout, stderr) ->
         if err
           util.log 'Error compiling coffee file.'
+          util.log err
           grrrr 'Uh, your coffee is bad.'
         else
           fs.unlink './chanto.coffee', (err) ->

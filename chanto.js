@@ -658,18 +658,4 @@
       }
     };
   })();
-  window.Logger = (function() {
-    return {
-      notice: function(m) {
-        if (navigator && navigator.notification) {
-          return navigator.notification.alert("" + m);
-        } else {
-          return alert(m);
-        }
-      },
-      debug: function(m) {
-        return console.log(m);
-      }
-    };
-  })();
 }).call(this);
